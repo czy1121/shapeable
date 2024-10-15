@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.reezy.cosmo.shapeable.ShapeableDrawable xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:arrowAlign="center"
+    app:arrowEdge="bottom"
+    app:arrowSize="10dp"
+    app:backgroundTint="#400000cc"
+    app:cornerSize="10dp"
+    app:cornerType="concave"
+    app:shadowColor="#40ffffff"
+    app:shadowRadius="10dp"
+    app:strokeColor="@android:color/holo_blue_dark"
+    app:strokeWidth="2dp" />

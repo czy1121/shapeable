@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/purple_200"
+    android:clipChildren="false"
+    android:columnCount="3"
+    android:orientation="horizontal"
+    tools:context="com.demo.app.MainActivity">
+
+    <me.reezy.cosmo.shapeable.ShapeableFrameLayout
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:gravity="center"
+        app:cornerSize="5dp"
+        app:cornerType="rounded"
+        app:shadowColor="#40ff0000"
+        app:shadowRadius="10dp"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:strokeColor="@color/teal_700"
+        app:strokeWidth="1dp" />
+
+    <me.reezy.cosmo.shapeable.ShapeableFrameLayout
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:gravity="center"
+        app:cornerSize="5dp"
+        app:cornerType="cut"
+        app:shadowColor="#40ff0000"
+        app:shadowRadius="10dp"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:strokeColor="@color/teal_700"
+        app:strokeWidth="0dp" />
+
+    <me.reezy.cosmo.shapeable.ShapeableFrameLayout
+        android:layout_width="80dp"
+        android:layout_height="32dp"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:gravity="center"
+        app:cornerSize="5dp"
+        app:cornerType="concave"
+        app:shadowColor="#40ff0000"
+        app:shadowRadius="10dp"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:strokeColor="@color/teal_700"
+        app:strokeWidth="1dp" />
+
+    <me.reezy.cosmo.shapeable.ShapeableFrameLayout
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:gravity="center"
+        app:arrowAlign="center"
+        app:arrowEdge="bottom"
+        app:arrowOffset="10dp"
+        app:arrowSize="8dp"
+        app:cornerSize="5dp"
+        app:cornerType="rounded"
+        app:shadowColor="#40ffffff"
+        app:shadowRadius="10dp"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:strokeColor="@color/teal_700"
+        app:strokeWidth="1dp" />
+
+    <me.reezy.cosmo.shapeable.ShapeableFrameLayout
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:gravity="center"
+        app:arrowAlign="start"
+        app:arrowEdge="left"
+        app:arrowOffset="20dp"
+        app:arrowSize="8dp"
+        app:backgroundTint="@color/teal_200"
+        app:cornerSize="5dp"
+        app:cornerType="cut"
+        app:shadowColor="#40ffffff"
+        app:shadowRadius="10dp"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:strokeColor="@color/teal_700"
+        app:strokeWidth="1dp" />
+
+    <me.reezy.cosmo.shapeable.ShapeableFrameLayout
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:gravity="center"
+        app:arrowAlign="end"
+        app:arrowEdge="right"
+        app:arrowOffset="20dp"
+        app:arrowSize="8dp"
+        app:cornerSize="5dp"
+        app:cornerType="concave"
+        app:shadowColor="#40ffffff"
+        app:shadowRadius="10dp"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:strokeColor="@color/teal_700"
+        app:strokeWidth="0dp" /> 
+
+    <View
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_columnSpan="3"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/shapeable" />
+
+    <View
+        android:id="@+id/shape"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:layout_columnSpan="3"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="#400000cc" />
+
+
+</GridLayout>

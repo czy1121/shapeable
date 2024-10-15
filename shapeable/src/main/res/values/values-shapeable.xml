@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ShapeableDrawable">
+        <!-- 背景色 -->
+        <attr name="backgroundTint" />
+
+        <!-- 描边 -->
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+
+        <!-- 形状 -->
+        <attr name="shapeAppearance" />
+        <attr name="shapeAppearanceOverlay" />
+
+        <!-- 角大小：设置四个角的大小，如果只想设置部分角大小，请不要指定此属性 -->
+        <attr name="cornerSize" />
+
+        <!-- 角类型：设置四个角的类型，如果只想设置部分角类型，请不要指定此属性 -->
+        <attr name="cornerType" format="enum">
+            <enum name="rounded" value="0"/>
+            <enum name="cut" value="1"/>
+            <enum name="concave" value="2"/>
+        </attr>
+
+        <!-- 阴影 -->
+        <attr name="shadowColor" format="color" />
+        <attr name="shadowRadius" format="dimension" />
+        <attr name="shadowOffsetX" format="dimension" />
+        <attr name="shadowOffsetY" format="dimension" />
+
+        <!-- 气泡箭头 -->
+        <attr name="arrowSize" format="dimension" />
+        <attr name="arrowOffset" format="dimension" />
+        <attr name="arrowEdge" format="enum">
+            <enum name="left" value="1" />
+            <enum name="top" value="2" />
+            <enum name="right" value="3" />
+            <enum name="bottom" value="4" />
+        </attr>
+        <attr name="arrowAlign" format="enum">
+            <enum name="start" value="1" />
+            <enum name="center" value="2" />
+            <enum name="end" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ShapeableFrameLayout">
+        <attr name="backgroundTint" />
+        <attr name="cornerSize" />
+        <attr name="cornerType" />
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="shapeAppearance" />
+        <attr name="shapeAppearanceOverlay" />
+
+        <attr name="shadowColor" />
+        <attr name="shadowRadius" />
+        <attr name="shadowOffsetX" />
+        <attr name="shadowOffsetY" />
+
+        <attr name="arrowSize" />
+        <attr name="arrowOffset" />
+        <attr name="arrowEdge" />
+        <attr name="arrowAlign" />
+    </declare-styleable>
+
+    <declare-styleable name="ShapeableLinearLayout">
+        <attr name="backgroundTint" />
+        <attr name="cornerSize" />
+        <attr name="cornerType" />
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="shapeAppearance" />
+        <attr name="shapeAppearanceOverlay" />
+
+        <attr name="shadowColor" />
+        <attr name="shadowRadius" />
+        <attr name="shadowOffsetX" />
+        <attr name="shadowOffsetY" />
+
+        <attr name="arrowSize" />
+        <attr name="arrowOffset" />
+        <attr name="arrowEdge" />
+        <attr name="arrowAlign" />
+    </declare-styleable>
+</resources>

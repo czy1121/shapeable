@@ -1,0 +1,10 @@
+
+apply from: "$buildGradlePath/build-demo.gradle"
+
+dependencies {
+
+    implementation project(":shapeable")
+
+    implementation 'me.reezy.cosmo:bk:0.8.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+}
