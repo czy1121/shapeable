@@ -21,9 +21,14 @@
         app:cornerType="rounded"
         app:shadowColor="#40ff0000"
         app:shadowRadius="10dp"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
-        app:strokeColor="@color/teal_700"
-        app:strokeWidth="1dp" />
+        app:gradientStartColor="@color/teal_700"
+        app:gradientEndColor="@color/teal_200"
+        app:gradientType="sweep"
+        app:gradientRadius="40dp"
+        app:gradientCenterX="0.5"
+        app:gradientCenterY="1"
+        app:strokeColor="@color/purple_700"
+        app:strokeWidth="2dp" />
 
     <me.reezy.cosmo.shapeable.ShapeableFrameLayout
         android:layout_width="80dp"
@@ -31,11 +36,16 @@
         android:layout_margin="10dp"
         android:clickable="true"
         android:gravity="center"
-        app:cornerSize="5dp"
-        app:cornerType="cut"
+        app:cornerSize="15dp"
+        app:cornerType="concave"
+        app:cornerPosition="top"
         app:shadowColor="#40ff0000"
         app:shadowRadius="10dp"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:gradientStartColor="@color/teal_700"
+        app:gradientEndColor="@color/teal_200"
+        app:gradientType="radial"
+        app:gradientRadius="40dp"
+        app:gradientCenterY="1"
         app:strokeColor="@color/teal_700"
         app:strokeWidth="0dp" />
 
@@ -49,7 +59,8 @@
         app:cornerType="concave"
         app:shadowColor="#40ff0000"
         app:shadowRadius="10dp"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:gradientStartColor="@color/teal_700"
+        app:gradientEndColor="@color/teal_200"
         app:strokeColor="@color/teal_700"
         app:strokeWidth="1dp" />
 
@@ -67,7 +78,6 @@
         app:cornerType="rounded"
         app:shadowColor="#40ffffff"
         app:shadowRadius="10dp"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
         app:strokeColor="@color/teal_700"
         app:strokeWidth="1dp" />
 
@@ -86,9 +96,14 @@
         app:cornerType="cut"
         app:shadowColor="#40ffffff"
         app:shadowRadius="10dp"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
         app:strokeColor="@color/teal_700"
-        app:strokeWidth="1dp" />
+        app:strokeWidth="1dp"
+        app:gradientStartColor="@color/teal_700"
+        app:gradientEndColor="@color/teal_200"
+        app:gradientType="sweep"
+        app:gradientRadius="40dp"
+        app:gradientCenterX="0"
+        app:gradientCenterY="1"/>
 
     <me.reezy.cosmo.shapeable.ShapeableFrameLayout
         android:layout_width="80dp"
@@ -104,7 +119,6 @@
         app:cornerType="concave"
         app:shadowColor="#40ffffff"
         app:shadowRadius="10dp"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
         app:strokeColor="@color/teal_700"
         app:strokeWidth="0dp" /> 
 

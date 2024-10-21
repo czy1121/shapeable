@@ -13,7 +13,7 @@ repositories {
     maven { url "https://gitee.com/ezy/repo/raw/cosmo/"}
 }
 dependencies {
-    implementation "me.reezy.cosmo:shapeable:0.9.0"
+    implementation "me.reezy.cosmo:shapeable:0.10.0"
 }
 ```
 
