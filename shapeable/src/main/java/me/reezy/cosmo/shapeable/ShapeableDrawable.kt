@@ -46,7 +46,7 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
     val clipPath = Path()
 
     private val clipRect: RectF = RectF()
-    private val mGradientState = GradientState()
+    private val gradientState = GradientState()
 
     constructor() : this(ShapeAppearanceModel())
 
@@ -69,7 +69,6 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
     private fun initAttrs(a: TypedArray) {
         strokeColor = a.getColorStateList(R.styleable.ShapeableDrawable_strokeColor)
         strokeWidth = a.getDimensionPixelSize(R.styleable.ShapeableDrawable_strokeWidth, 0).toFloat()
-        tintList = a.getColorStateList(R.styleable.ShapeableDrawable_backgroundTint) ?: ColorStateList.valueOf(Color.TRANSPARENT)
 
         val cornerSize = a.getDimension(R.styleable.ShapeableDrawable_cornerSize, 0f)
         if (cornerSize > 0f) {
@@ -79,20 +78,22 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         }
 
         // 渐变背景色
-        mGradientState.gradientColors = a.getGradientColors()
-        mGradientState.gradientType = a.getInt(R.styleable.ShapeableDrawable_gradientType, GradientDrawable.LINEAR_GRADIENT)
-        mGradientState.gradientRadius = a.getDimension(R.styleable.ShapeableDrawable_gradientRadius, 0f)
-        mGradientState.gradientCenterX = a.getFloat(R.styleable.ShapeableDrawable_gradientCenterX, 0.5f)
-        mGradientState.gradientCenterY = a.getFloat(R.styleable.ShapeableDrawable_gradientCenterY, 0.5f)
-        mGradientState.gradientOrientation = try {
+        gradientState.gradientColors = a.getGradientColors()
+        gradientState.gradientType = a.getInt(R.styleable.ShapeableDrawable_gradientType, GradientDrawable.LINEAR_GRADIENT)
+        gradientState.gradientRadius = a.getDimension(R.styleable.ShapeableDrawable_gradientRadius, 0f)
+        gradientState.gradientCenterX = a.getFloat(R.styleable.ShapeableDrawable_gradientCenterX, 0.5f)
+        gradientState.gradientCenterY = a.getFloat(R.styleable.ShapeableDrawable_gradientCenterY, 0.5f)
+        gradientState.gradientOrientation = try {
             GradientDrawable.Orientation.values()[a.getInt(R.styleable.ShapeableDrawable_gradientOrientation, 0)]
         } catch (e: IndexOutOfBoundsException) {
             GradientDrawable.Orientation.TOP_BOTTOM
         }
 
-        if (mGradientState.gradientColors != null) {
+        if (gradientState.gradientColors != null) {
             setUseTintColorForShadow(false)
             tintList = null
+        } else {
+            tintList = a.getColorStateList(R.styleable.ShapeableDrawable_backgroundTint) ?: ColorStateList.valueOf(Color.TRANSPARENT)
         }
 
         // 阴影
@@ -215,7 +216,7 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         super.onBoundsChange(bounds)
         updateClipPath(bounds.width(), bounds.height())
 
-        mGradientState.createFillShader(bounds.toRectF()) ?.let {
+        gradientState.createFillShader(bounds.toRectF()) ?.let {
             (fieldFillPaint.get(this) as Paint).shader = it
         }
         invalidateSelf()

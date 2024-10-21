@@ -1,6 +1,6 @@
 # shapeable
 
-ShapeableDrawable/ShapeableLinearLayout/ShapeableFrameLayout 可自定义 背景色/形状/阴影/描边
+ShapeableDrawable/ShapeableLinearLayout/ShapeableFrameLayout 可自定义 背景色/渐变背景/形状/阴影/描边
    
 
 <img src="screenshot.png" width="300" />
