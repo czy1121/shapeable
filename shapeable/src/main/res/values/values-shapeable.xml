@@ -13,16 +13,15 @@
         <attr name="shapeAppearance" />
         <attr name="shapeAppearanceOverlay" />
 
-        <!-- 角大小：设置四个角的大小，如果只想设置部分角大小，请不要指定此属性 -->
+        <!-- 角大小 -->
         <attr name="cornerSize" />
-
-        <!-- 角类型：设置四个角的类型，如果只想设置部分角类型，请不要指定此属性 -->
+        <!-- 角类型 -->
         <attr name="cornerType" format="enum">
             <enum name="rounded" value="0"/>
             <enum name="cut" value="1"/>
             <enum name="concave" value="2"/>
         </attr>
-
+        <!-- 角位置 -->
         <attr name="cornerPosition" format="enum">
             <enum name="all" value="0"/>
 

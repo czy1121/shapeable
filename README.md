@@ -20,7 +20,7 @@ dependencies {
 ## 属性
 
 ```xml 
-<declare-styleable name="ShapeableDrawable">
+    <declare-styleable name="ShapeableDrawable">
     <!-- 背景色 -->
     <attr name="backgroundTint" />
 
@@ -32,15 +32,39 @@ dependencies {
     <attr name="shapeAppearance" />
     <attr name="shapeAppearanceOverlay" />
 
-    <!-- 角大小：设置四个角的大小，如果只想设置部分角大小，请不要指定此属性 -->
-    <attr name="cornerSize" />
-    
-    <!-- 角类型：设置四个角的类型，如果只想设置部分角类型，请不要指定此属性 -->
+    <!-- 角大小 -->
+    <attr name="cornerSize" /> 
+    <!-- 角类型 -->
     <attr name="cornerType" format="enum">
-        <enum name="rounded" value="0" />
-        <enum name="cut" value="1" />
-        <enum name="concave" value="2" />
+        <enum name="rounded" value="0"/>
+        <enum name="cut" value="1"/>
+        <enum name="concave" value="2"/>
+    </attr> 
+    <!-- 角位置 -->
+    <attr name="cornerPosition" format="enum">
+        <enum name="all" value="0"/>
+
+        <enum name="tl" value="1"/>
+        <enum name="tr" value="2"/>
+        <enum name="bl" value="3"/>
+        <enum name="br" value="4"/>
+
+        <enum name="top" value="5"/>
+        <enum name="bottom" value="6"/>
+        <enum name="left" value="7"/>
+        <enum name="right" value="8"/>
+
+        <enum name="tl_br" value="9"/>
+        <enum name="bl_tr" value="10"/>
+
+        <enum name="tl_none" value="11"/>
+        <enum name="tr_none" value="12"/>
+        <enum name="bl_none" value="13"/>
+        <enum name="br_none" value="14"/>
     </attr>
+
+
+
 
     <!-- 阴影 -->
     <attr name="shadowColor" format="color" />
@@ -62,6 +86,37 @@ dependencies {
         <enum name="center" value="2" />
         <enum name="end" value="3" />
     </attr>
+
+
+    <!--背景渐变类型-->
+    <attr name="gradientType" format="enum">
+        <enum name="linear" value="0" />
+        <enum name="radial" value="1" />
+        <enum name="sweep" value="2" />
+    </attr>
+    <!--渐变中心点X坐标（0-1）-->
+    <attr name="gradientCenterX" format="float" />
+    <!--渐变中心点Y坐标（0-1）-->
+    <attr name="gradientCenterY" format="float" />
+    <!--渐变半径-->
+    <attr name="gradientRadius" format="dimension" />
+    <!--渐变方向-->
+    <attr name="gradientOrientation" format="enum">
+        <enum name="TOP_BOTTOM" value="0" />
+        <enum name="TR_BL" value="1" />
+        <enum name="RIGHT_LEFT" value="2" />
+        <enum name="BR_TL" value="3" />
+        <enum name="BOTTOM_TOP" value="4" />
+        <enum name="BL_TR" value="5" />
+        <enum name="LEFT_RIGHT" value="6" />
+        <enum name="TL_BR" value="7" />
+    </attr>
+    <!--渐变开始颜色-->
+    <attr name="gradientStartColor" format="color" />
+    <!--渐变中心颜色-->
+    <attr name="gradientCenterColor" format="color" />
+    <!--渐变结尾颜色-->
+    <attr name="gradientEndColor" format="color" />
 </declare-styleable>
 ``` 
 ## 用法

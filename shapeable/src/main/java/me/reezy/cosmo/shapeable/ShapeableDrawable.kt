@@ -16,14 +16,17 @@ import android.graphics.Shader
 import android.graphics.SweepGradient
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
+import android.util.TypedValue
 import androidx.core.content.res.TypedArrayUtils.obtainAttributes
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toRectF
 import com.google.android.material.shadow.ShadowRenderer
+import com.google.android.material.shape.AbsoluteCornerSize
 import com.google.android.material.shape.CornerSize
 import com.google.android.material.shape.CornerTreatment
 import com.google.android.material.shape.CutCornerTreatment
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.RelativeCornerSize
 import com.google.android.material.shape.RoundedCornerTreatment
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.shape.ShapeAppearancePathProvider
@@ -66,33 +69,26 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         ta.recycle()
     }
 
+
     private fun initAttrs(a: TypedArray) {
         strokeColor = a.getColorStateList(R.styleable.ShapeableDrawable_strokeColor)
         strokeWidth = a.getDimensionPixelSize(R.styleable.ShapeableDrawable_strokeWidth, 0).toFloat()
 
-        val cornerSize = a.getDimension(R.styleable.ShapeableDrawable_cornerSize, 0f)
-        if (cornerSize > 0f) {
-            val cornerType = a.getInteger(R.styleable.ShapeableDrawable_cornerType, 0)
+        val cornerSize = a.getCornerSize(R.styleable.ShapeableDrawable_cornerSize)
+        if (cornerSize != null) {
             val cornerPosition = a.getInteger(R.styleable.ShapeableDrawable_cornerPosition, 0)
-            setCorners(cornerSize, cornerPosition, cornerType)
+            val cornerType = a.getInteger(R.styleable.ShapeableDrawable_cornerType, 0)
+            setCorners(cornerPosition, cornerSize, cornerType)
         }
 
         // 渐变背景色
-        gradientState.gradientColors = a.getGradientColors()
-        gradientState.gradientType = a.getInt(R.styleable.ShapeableDrawable_gradientType, GradientDrawable.LINEAR_GRADIENT)
-        gradientState.gradientRadius = a.getDimension(R.styleable.ShapeableDrawable_gradientRadius, 0f)
-        gradientState.gradientCenterX = a.getFloat(R.styleable.ShapeableDrawable_gradientCenterX, 0.5f)
-        gradientState.gradientCenterY = a.getFloat(R.styleable.ShapeableDrawable_gradientCenterY, 0.5f)
-        gradientState.gradientOrientation = try {
-            GradientDrawable.Orientation.values()[a.getInt(R.styleable.ShapeableDrawable_gradientOrientation, 0)]
-        } catch (e: IndexOutOfBoundsException) {
-            GradientDrawable.Orientation.TOP_BOTTOM
-        }
+        gradientState.loadFromAttrs(a)
 
         if (gradientState.gradientColors != null) {
             setUseTintColorForShadow(false)
             tintList = null
         } else {
+            setUseTintColorForShadow(true)
             tintList = a.getColorStateList(R.styleable.ShapeableDrawable_backgroundTint) ?: ColorStateList.valueOf(Color.TRANSPARENT)
         }
 
@@ -114,26 +110,12 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         val arrowSize = a.getDimension(R.styleable.ShapeableDrawable_arrowSize, 0f)
         if (arrowSize > 0f) {
             val arrowOffset = a.getDimension(R.styleable.ShapeableDrawable_arrowOffset, 0f)
-            val arrowEdge = a.getInteger(R.styleable.ShapeableDrawable_arrowEdge,  ArrowEdgeTreatment.EDGE_BOTTOM)
-            val arrowAlign = a.getInteger(R.styleable.ShapeableDrawable_arrowAlign, ArrowEdgeTreatment.ALIGN_CENTER )
+            val arrowEdge = a.getInteger(R.styleable.ShapeableDrawable_arrowEdge, ArrowEdgeTreatment.EDGE_BOTTOM)
+            val arrowAlign = a.getInteger(R.styleable.ShapeableDrawable_arrowAlign, ArrowEdgeTreatment.ALIGN_CENTER)
             setArrow(arrowSize, arrowOffset, arrowEdge, arrowAlign)
         }
     }
 
-    private fun TypedArray.getGradientColors(): IntArray? {
-
-        val hasStartColor = hasValue(R.styleable.ShapeableDrawable_gradientStartColor)
-        val hasCenterColor = hasValue(R.styleable.ShapeableDrawable_gradientCenterColor)
-        val hasEndColor = hasValue(R.styleable.ShapeableDrawable_gradientEndColor)
-
-        if (hasStartColor || hasCenterColor || hasEndColor) {
-            val start = getColor(R.styleable.ShapeableDrawable_gradientStartColor, 0)
-            val center = getColor(R.styleable.ShapeableDrawable_gradientCenterColor, 0)
-            val end = getColor(R.styleable.ShapeableDrawable_gradientEndColor, 0)
-            return if (hasCenterColor) intArrayOf(start, center, end) else intArrayOf(start, end)
-        }
-        return null
-    }
 
     @Suppress("OVERRIDE_DEPRECATION")
     override fun setShadowRadius(radius: Int) {
@@ -141,15 +123,15 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         super.setShadowRadius(radius)
     }
 
-    private fun setCorners(size: Float, position: Int, type: Int) {
-        val corner = when(type) {
+    private fun setCorners(position: Int, size: CornerSize, type: Int) {
+        val corner = when (type) {
             0 -> RoundedCornerTreatment()
             1 -> CutCornerTreatment()
             2 -> ConcaveCornerTreatment()
             else -> RoundedCornerTreatment()
         }
         val builder = shapeAppearanceModel.toBuilder()
-        shapeAppearanceModel =  when (position) {
+        shapeAppearanceModel = when (position) {
             1 -> builder.tl(corner, size).build()
             2 -> builder.tr(corner, size).build()
             3 -> builder.bl(corner, size).build()
@@ -173,13 +155,16 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
 
     }
 
-    private inline fun ShapeAppearanceModel.Builder.tl(cornerTreatment: CornerTreatment, size: Float) =
+    private inline fun ShapeAppearanceModel.Builder.tl(cornerTreatment: CornerTreatment, size: CornerSize) =
         setTopLeftCorner(cornerTreatment).setTopLeftCornerSize(size)
-    private inline fun ShapeAppearanceModel.Builder.tr(cornerTreatment: CornerTreatment, size: Float) =
+
+    private inline fun ShapeAppearanceModel.Builder.tr(cornerTreatment: CornerTreatment, size: CornerSize) =
         setTopRightCorner(cornerTreatment).setTopRightCornerSize(size)
-    private inline fun ShapeAppearanceModel.Builder.bl(cornerTreatment: CornerTreatment, size: Float) =
+
+    private inline fun ShapeAppearanceModel.Builder.bl(cornerTreatment: CornerTreatment, size: CornerSize) =
         setBottomLeftCorner(cornerTreatment).setBottomLeftCornerSize(size)
-    private inline fun ShapeAppearanceModel.Builder.br(cornerTreatment: CornerTreatment, size: Float) =
+
+    private inline fun ShapeAppearanceModel.Builder.br(cornerTreatment: CornerTreatment, size: CornerSize) =
         setBottomRightCorner(cornerTreatment).setBottomRightCornerSize(size)
 
     fun setShadowOffset(offsetX: Int, offsetY: Int) {
@@ -216,7 +201,7 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         super.onBoundsChange(bounds)
         updateClipPath(bounds.width(), bounds.height())
 
-        gradientState.createFillShader(bounds.toRectF()) ?.let {
+        gradientState.createFillShader(bounds.toRectF())?.let {
             (fieldFillPaint.get(this) as Paint).shader = it
         }
         invalidateSelf()
@@ -235,6 +220,21 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         clipPathProvider.calculatePath(newModel, 1f, clipRect, clipPath)
     }
 
+    private fun TypedArray.getCornerSize(index: Int): CornerSize? {
+        val value = peekValue(index) ?: return null
+        if (value.type == TypedValue.TYPE_DIMENSION) {
+            val size = TypedValue.complexToDimension(value.data, resources.displayMetrics)
+            return if (size > 0) AbsoluteCornerSize(size) else null
+        }
+        if (value.type == TypedValue.TYPE_FRACTION) {
+            val fraction = value.getFraction(1.0f, 1.0f)
+            return if (fraction > 0) RelativeCornerSize(fraction) else null
+        }
+        return null
+    }
+
+
+
     private class GradientState {
 
         var gradientColors: IntArray? = null
@@ -244,6 +244,19 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         var gradientCenterY: Float = 0.5f
         var gradientRadius: Float = 0.5f
 
+        fun loadFromAttrs(a: TypedArray) {
+
+            gradientColors = a.getGradientColors()
+            gradientType = a.getInt(R.styleable.ShapeableDrawable_gradientType, GradientDrawable.LINEAR_GRADIENT)
+            gradientRadius = a.getDimension(R.styleable.ShapeableDrawable_gradientRadius, 0f)
+            gradientCenterX = a.getFloat(R.styleable.ShapeableDrawable_gradientCenterX, 0.5f)
+            gradientCenterY = a.getFloat(R.styleable.ShapeableDrawable_gradientCenterY, 0.5f)
+            gradientOrientation = try {
+                GradientDrawable.Orientation.values()[a.getInt(R.styleable.ShapeableDrawable_gradientOrientation, 0)]
+            } catch (e: IndexOutOfBoundsException) {
+                GradientDrawable.Orientation.TOP_BOTTOM
+            }
+        }
         fun createFillShader(rect: RectF): Shader? = when {
             gradientColors == null -> null
             gradientType == GradientDrawable.LINEAR_GRADIENT -> {
@@ -259,6 +272,7 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
                 }
                 LinearGradient(r.left, r.top, r.right, r.bottom, gradientColors!!, null, Shader.TileMode.CLAMP)
             }
+
             gradientType == GradientDrawable.RADIAL_GRADIENT -> {
                 if (gradientRadius > 0) {
                     val x0 = rect.left + (rect.right - rect.left) * gradientCenterX
@@ -268,14 +282,30 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
                     null
                 }
             }
+
             gradientType == GradientDrawable.SWEEP_GRADIENT -> {
                 val x0 = rect.left + (rect.right - rect.left) * gradientCenterX
                 val y0 = rect.top + (rect.bottom - rect.top) * gradientCenterY
                 SweepGradient(x0, y0, gradientColors!!, null)
             }
+
             else -> null
         }
 
+        private fun TypedArray.getGradientColors(): IntArray? {
+
+            val hasStartColor = hasValue(R.styleable.ShapeableDrawable_gradientStartColor)
+            val hasCenterColor = hasValue(R.styleable.ShapeableDrawable_gradientCenterColor)
+            val hasEndColor = hasValue(R.styleable.ShapeableDrawable_gradientEndColor)
+
+            if (hasStartColor || hasCenterColor || hasEndColor) {
+                val start = getColor(R.styleable.ShapeableDrawable_gradientStartColor, 0)
+                val center = getColor(R.styleable.ShapeableDrawable_gradientCenterColor, 0)
+                val end = getColor(R.styleable.ShapeableDrawable_gradientEndColor, 0)
+                return if (hasCenterColor) intArrayOf(start, center, end) else intArrayOf(start, end)
+            }
+            return null
+        }
     }
 
     private class RealShadowRenderer : ShadowRenderer() {
