@@ -13,14 +13,14 @@ repositories {
     maven { url "https://gitee.com/ezy/repo/raw/cosmo/"}
 }
 dependencies {
-    implementation "me.reezy.cosmo:shapeable:0.10.0"
+    implementation "me.reezy.cosmo:shapeable:0.10.1"
 }
 ```
 
 ## 属性
 
 ```xml 
-    <declare-styleable name="ShapeableDrawable">
+<declare-styleable name="ShapeableDrawable">
     <!-- 背景色 -->
     <attr name="backgroundTint" />
 
