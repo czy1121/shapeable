@@ -2,9 +2,13 @@ package com.demo.app
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.ScaleDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import com.demo.app.databinding.ActivityMainBinding
 import com.google.android.material.shape.MarkerEdgeTreatment
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -33,6 +37,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             strokeWidth = 2f.dp
             strokeColor = ColorStateList.valueOf(Color.RED)
         }
+
+        binding.pb1.setOnClickListener { (it as ProgressBar).update() }
+        binding.pb2.setOnClickListener { (it as ProgressBar).update() }
+        binding.pb3.setOnClickListener { (it as ProgressBar).update() }
+    }
+
+    private fun ProgressBar.update() {
+        progress = (progress + 1) % 100
     }
 
     private val Float.dp: Float get() = resources.displayMetrics.density * this

@@ -2,6 +2,9 @@
 <resources>
 
     <declare-styleable name="ShapeableDrawable">
+        <attr name="android:width" />
+        <attr name="android:height" />
+
         <!-- 背景色 -->
         <attr name="backgroundTint" />
 

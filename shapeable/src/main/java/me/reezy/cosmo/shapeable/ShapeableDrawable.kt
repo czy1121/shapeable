@@ -14,8 +14,11 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.SweepGradient
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import androidx.core.content.res.TypedArrayUtils.obtainAttributes
 import androidx.core.graphics.ColorUtils
@@ -30,28 +33,34 @@ import com.google.android.material.shape.RelativeCornerSize
 import com.google.android.material.shape.RoundedCornerTreatment
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.shape.ShapeAppearancePathProvider
-import me.reezy.cosmo.R
 import org.xmlpull.v1.XmlPullParser
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.min
 import kotlin.math.sqrt
 
+@Suppress("NOTHING_TO_INLINE")
 @SuppressLint("RestrictedApi")
-class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawable(shapeModel) {
-    init {
-        fieldShadowRenderer.set(this, RealShadowRenderer())
-        shadowCompatibilityMode = SHADOW_COMPAT_MODE_ALWAYS
-        setUseTintColorForShadow(true)
-        tintList = ColorStateList.valueOf(Color.TRANSPARENT)
-    }
+class ShapeableDrawable private constructor(state: ShapeableState, msdState: MaterialShapeDrawableState, isNew: Boolean = true) : MaterialShapeDrawable(msdState) {
+
+    private var constantState: RealConstantState = RealConstantState(state, msdState)
+
+    private val clipRect: RectF = RectF()
 
     val clipPath = Path()
 
-    private val clipRect: RectF = RectF()
-    private val gradientState = GradientState()
+    init {
+        fieldShadowRenderer.set(this, RealShadowRenderer())
+        if (isNew) {
+            shadowCompatibilityMode = SHADOW_COMPAT_MODE_ALWAYS
+            setUseTintColorForShadow(true)
+            tintList = ColorStateList.valueOf(Color.TRANSPARENT)
+        }
+    }
 
-    constructor() : this(ShapeAppearanceModel())
+    constructor() : this(ShapeableState(), MaterialShapeDrawableState(ShapeAppearanceModel(), null))
+
+    constructor(shapeModel: ShapeAppearanceModel) : this(ShapeableState(), MaterialShapeDrawableState(shapeModel, null))
 
     constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0)
             : this(ShapeAppearanceModel.builder(context, attrs, defStyleAttr, defStyleRes).build()) {
@@ -69,8 +78,22 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         ta.recycle()
     }
 
+    override fun getIntrinsicWidth(): Int = shapeableState.width
+    override fun getIntrinsicHeight(): Int = shapeableState.height
+    override fun getConstantState(): ConstantState = constantState
+
+    override fun mutate(): Drawable {
+        super.mutate()
+        constantState = RealConstantState(ShapeableState(shapeableState), super.getConstantState() as MaterialShapeDrawableState)
+        return this
+    }
+
+    private val shapeableState: ShapeableState get() = constantState.shapeable
 
     private fun initAttrs(a: TypedArray) {
+
+        shapeableState.init(a)
+
         strokeColor = a.getColorStateList(R.styleable.ShapeableDrawable_strokeColor)
         strokeWidth = a.getDimensionPixelSize(R.styleable.ShapeableDrawable_strokeWidth, 0).toFloat()
 
@@ -81,16 +104,15 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
             setCorners(cornerPosition, cornerSize, cornerType)
         }
 
-        // 渐变背景色
-        gradientState.loadFromAttrs(a)
 
-        if (gradientState.gradientColors != null) {
+        if (shapeableState.gradientColors != null) {
             setUseTintColorForShadow(false)
             tintList = null
         } else {
             setUseTintColorForShadow(true)
             tintList = a.getColorStateList(R.styleable.ShapeableDrawable_backgroundTint) ?: ColorStateList.valueOf(Color.TRANSPARENT)
         }
+
 
         // 阴影
         if (a.hasValue(R.styleable.ShapeableDrawable_shadowRadius)) {
@@ -198,10 +220,11 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
     }
 
     override fun onBoundsChange(bounds: Rect) {
+        Log.e("OoO", "${hashCode()}.onBoundsChange($bounds) width = ${shapeableState.width}")
         super.onBoundsChange(bounds)
         updateClipPath(bounds.width(), bounds.height())
 
-        gradientState.createFillShader(bounds.toRectF())?.let {
+        shapeableState.createFillShader(bounds.toRectF())?.let {
             (fieldFillPaint.get(this) as Paint).shader = it
         }
         invalidateSelf()
@@ -234,8 +257,11 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
     }
 
 
+    private class ShapeableState() {
 
-    private class GradientState {
+
+        var width: Int = -1
+        var height: Int = -1
 
         var gradientColors: IntArray? = null
         var gradientType: Int = GradientDrawable.LINEAR_GRADIENT
@@ -244,7 +270,22 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
         var gradientCenterY: Float = 0.5f
         var gradientRadius: Float = 0.5f
 
-        fun loadFromAttrs(a: TypedArray) {
+        constructor(orig: ShapeableState) : this() {
+            width = orig.width
+            height = orig.height
+
+            gradientColors = orig.gradientColors
+            gradientType = orig.gradientType
+            gradientOrientation = orig.gradientOrientation
+            gradientCenterX = orig.gradientCenterX
+            gradientCenterY = orig.gradientCenterY
+            gradientRadius = orig.gradientRadius
+        }
+
+
+        fun init(a: TypedArray) {
+            width = a.getDimensionPixelSize(R.styleable.ShapeableDrawable_android_width, -1)
+            height = a.getDimensionPixelSize(R.styleable.ShapeableDrawable_android_height, -1)
 
             gradientColors = a.getGradientColors()
             gradientType = a.getInt(R.styleable.ShapeableDrawable_gradientType, GradientDrawable.LINEAR_GRADIENT)
@@ -257,6 +298,7 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
                 GradientDrawable.Orientation.TOP_BOTTOM
             }
         }
+
         fun createFillShader(rect: RectF): Shader? = when {
             gradientColors == null -> null
             gradientType == GradientDrawable.LINEAR_GRADIENT -> {
@@ -270,7 +312,12 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
                     GradientDrawable.Orientation.LEFT_RIGHT -> RectF(rect.left, rect.top, rect.right, rect.top)
                     else -> RectF(rect.left, rect.top, rect.right, rect.bottom)
                 }
-                LinearGradient(r.left, r.top, r.right, r.bottom, gradientColors!!, null, Shader.TileMode.CLAMP)
+                val tileMode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    Shader.TileMode.DECAL
+                } else {
+                    Shader.TileMode.CLAMP
+                }
+                LinearGradient(r.left, r.top, r.right, r.bottom, gradientColors!!, null, tileMode)
             }
 
             gradientType == GradientDrawable.RADIAL_GRADIENT -> {
@@ -306,6 +353,18 @@ class ShapeableDrawable(shapeModel: ShapeAppearanceModel) : MaterialShapeDrawabl
             }
             return null
         }
+
+    }
+
+
+    private class RealConstantState(val shapeable: ShapeableState, val msd: MaterialShapeDrawableState) : ConstantState() {
+        override fun newDrawable(): Drawable {
+            val d = ShapeableDrawable(ShapeableState(shapeable), msd, false)
+            d.invalidateSelf()
+            return d
+        }
+
+        override fun getChangingConfigurations(): Int = 0
     }
 
     private class RealShadowRenderer : ShadowRenderer() {

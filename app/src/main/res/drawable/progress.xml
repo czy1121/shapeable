@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item android:id="@android:id/background">
+        <me.reezy.cosmo.shapeable.ShapeableDrawable
+            app:backgroundTint="#33000000"
+            app:cornerSize="5dp"
+            app:cornerType="cut" />
+    </item>
+    <item android:id="@android:id/progress">
+        <scale
+            android:scaleWidth="100%"
+            android:useIntrinsicSizeAsMinimum="true">
+            <me.reezy.cosmo.shapeable.ShapeableDrawable
+                android:width="10dp"
+                app:cornerSize="5dp"
+                app:cornerType="cut"
+                app:gradientEndColor="#28000000"
+                app:gradientOrientation="LEFT_RIGHT"
+                app:gradientStartColor="#06000000" />
+        </scale>
+    </item>
+</layer-list>
