@@ -18,7 +18,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import androidx.core.content.res.TypedArrayUtils.obtainAttributes
 import androidx.core.graphics.ColorUtils
@@ -220,7 +219,6 @@ class ShapeableDrawable private constructor(state: ShapeableState, msdState: Mat
     }
 
     override fun onBoundsChange(bounds: Rect) {
-        Log.e("OoO", "${hashCode()}.onBoundsChange($bounds) width = ${shapeableState.width}")
         super.onBoundsChange(bounds)
         updateClipPath(bounds.width(), bounds.height())
 
